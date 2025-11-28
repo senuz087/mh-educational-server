@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>👻 MH High Odd Analyzing 👻</title>
+<style>
+  body {
+    background-color: #0a0f1a;
+    color: #00ffc8;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    color: #ff00ff;
+    text-shadow: 0 0 20px #ff00ff;
+  }
+  .inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+  }
+  input {
+    background: #1a1f2e;
+    border: 1px solid #00ffc8;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  button {
+    background: linear-gradient(90deg, #ff00ff, #00ffc8);
+    border: none;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #00ffc8;
+  }
+  button:hover {
+    transform: scale(1.05);
+  }
+  .signal-box {
+    border: 1px solid #00ffc8;
+    border-radius: 10px;
+    padding: 15px;
+    background: #11172b;
+    color: #fff;
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 0 0 20px #00ffc8;
+  }
+  .footer {
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<h1>👻 MH High Odd Analyzing 👻</h1>
+
+<div class="inputs">
+  <input id="t1" placeholder="T1___________" />
+  <input id="o1" placeholder="01___________" />
+  <input id="t2" placeholder="T2___________" />
+  <input id="o2" placeholder="02___________" />
+  <input id="t3" placeholder="T3___________" />
+  <input id="o3" placeholder="03___________" />
+  <input id="t4" placeholder="T4___________" />
+  <input id="o4" placeholder="04___________" />
+  <input id="t5" placeholder="T5___________" />
+  <input id="o5" placeholder="05___________" />
+</div>
+
+<button onclick="generateSignal()">🚀 Analyze & Get Signal</button>
+
+<div id="signal" class="signal-box">
+  🟢 Waiting for Signal...
+</div>
+
+<div class="footer">
+  MH Super Aviator - Sri Lanka Time - ⚡
+</div>
+
+<script>
+function generateSignal() {
+  const now = new Date();
+  const time = now.toTimeString().split(' ')[0];
+  const odds = (Math.random() * (20 - 10) + 10).toFixed(2);
+  const conf = (Math.random() * (99 - 92) + 92).toFixed(1);
+  
+  const signals = [
+    `🟢 ${time} - ${odds}x [+0${Math.floor(Math.random() * 9)}s] [${conf}%+]<br>Ultra-Prime Signal • Entry: Direct/Skip 1 • Sri Lanka Time`,
+    `🔵 ${time} - ${(odds - 1).toFixed(2)}x [+0${Math.floor(Math.random() * 9)}s] [${(conf - 3).toFixed(1)}%+]<br>Prime Backup • Entry: Skip 1/Direct`
+  ];
+  
+  document.getElementById("signal").innerHTML = signals.join("<br><br>");
+}
+</script>
+
+</body>
+</html>
