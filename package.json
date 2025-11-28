@@ -1,23 +1,12 @@
 {
-  "name": "mh-educational-server",
+  "name": "mh-analyzing",
   "version": "1.0.0",
-  "description": "MH Real-Time Educational Server (Safe Demo)",
+  "description": "MH ANLIZING — Descriptive live analyzer (non-predictive)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": [
-    "node",
-    "express",
-    "server",
-    "api",
-    "mh",
-    "educational"
-  ],
-  "author": "Maleesha",
-  "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.5",
     "express": "^4.18.2"
   }
 }
