@@ -1,75 +1,254 @@
 <!doctype html>
-<html lang="en">
+<html lang="si">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>👻 MH ANLIZING 👻 — Live Analyzer (Descriptive)</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Chart.js for small charts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Random Super-Spike Simulator — Super Super Only</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#ff3b30; --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,59,48,0.06), transparent 10%),
+                  linear-gradient(180deg,#071023 0%, #0a1524 100%);
+      color:#e6eef8;
+      padding:28px;
+    }
+
+    .app {
+      width:100%;
+      max-width:920px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:20px;
+      box-shadow:0 8px 30px rgba(2,6,23,0.7);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:14px;
+    }
+    .logo {
+      width:56px;height:56px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent), #ff9a76);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;
+      font-size:18px;box-shadow:0 6px 20px rgba(255,59,48,0.12);
+    }
+    h1{margin:0;font-size:18px}
+    p.lead{margin:2px 0 0;color:var(--muted);font-size:13px}
+
+    .controls{
+      display:flex;
+      gap:12px;
+      margin:18px 0;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      background:linear-gradient(180deg,var(--accent), #ff7a6a);
+      color:white;border:none;padding:10px 16px;border-radius:10px;font-weight:600;
+      cursor:pointer;box-shadow:0 8px 24px rgba(255,59,48,0.14);transition:transform .12s;
+    }
+    .btn:active{transform:translateY(2px)}
+    .btn.secondary{
+      background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);
+      box-shadow:none;padding:8px 12px;
+    }
+
+    label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+    input[type="number"], input[type="time"], select {
+      background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:8px;color:inherit;
+      outline:none;font-size:14px;width:160px;
+    }
+
+    .table-wrap{
+      margin-top:18px;
+      border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);
+    }
+    table{width:100%;border-collapse:collapse}
+    thead th{background:rgba(255,255,255,0.02);font-size:13px;padding:10px;text-align:left;color:var(--muted)}
+    tbody td{padding:12px 10px;border-top:1px solid rgba(255,255,255,0.02)}
+    .odd {font-weight:700}
+    .super {background:linear-gradient(90deg, rgba(255,59,48,0.12), rgba(255,151,120,0.06));border-left:3px solid rgba(255,59,48,0.9);padding-left:8px}
+
+    .tiny {font-size:12px;color:var(--muted)}
+    footer {margin-top:14px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    .badge {background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-size:13px;color:var(--muted)}
+    .danger {color:#ffb3ab;font-weight:700}
+
+    @media (max-width:720px){
+      .controls{flex-direction:column;align-items:stretch}
+      input[type="number"],input[type="time"]{width:100%}
+    }
+  </style>
 </head>
 <body>
-  <header class="brand">
-    <h1>👻 MH ANLIZING 👻</h1>
-    <p class="tag">Live descriptive analyzer — NOT a betting predictor</p>
-  </header>
-
-  <main class="container">
-    <section class="inputs">
-      <h2>Enter rounds (time &amp; odd)</h2>
-      <div id="rows"></div>
-
-      <div class="controls">
-        <button id="addRow" class="btn">+ Add row</button>
-        <button id="clearAll" class="btn alt">Clear</button>
-        <button id="analyze" class="btn primary">Analyze Now</button>
+  <div class="app" role="main">
+    <header>
+      <div class="logo">SS</div>
+      <div>
+        <h1>Random Super-Spike Simulator — Super-Super Only</h1>
+        <p class="lead">Educational simulator — shows only randomly generated ≥10× spikes (for learning / demo).</p>
       </div>
-      <p class="note">Tip: You can paste many rows quickly — use Add row or paste into the odd field and press Analyze.</p>
-    </section>
+    </header>
 
-    <section class="results">
-      <h2>Analysis results (descriptive)</h2>
+    <div class="controls">
+      <label>
+        Start time (reference)
+        <input id="startTime" type="time" value="16:28">
+      </label>
 
-      <div class="cards">
-        <div class="card">
-          <div class="card-title">Count</div>
-          <div id="count" class="card-value">0</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Mean</div>
-          <div id="mean" class="card-value">—</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Median</div>
-          <div id="median" class="card-value">—</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Std dev</div>
-          <div id="std" class="card-value">—</div>
-        </div>
-      </div>
+      <label>
+        Round interval (sec)
+        <input id="intervalSec" type="number" min="5" max="300" value="15">
+      </label>
 
-      <div class="panel">
-        <h3>High-odd summary (descriptive)</h3>
-        <ul id="highSummary" class="list"></ul>
-      </div>
+      <label>
+        How many rounds to simulate
+        <input id="roundCount" type="number" min="10" max="5000" value="200">
+      </label>
 
-      <div class="panel">
-        <h3>Multiplier distribution</h3>
-        <canvas id="histChart" height="120"></canvas>
-      </div>
+      <button id="genBtn" class="btn" title="Generate Super Super spikes">Generate Super Super Odd</button>
+      <button id="clearBtn" class="btn secondary" title="Clear table">Clear</button>
+    </div>
 
-      <div class="panel">
-        <h3>Recent rows (latest first)</h3>
-        <div id="recentList" class="recent"></div>
-      </div>
-    </section>
-  </main>
+    <div class="table-wrap" aria-live="polite">
+      <table id="resultTable" role="table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Round #</th>
+            <th>Odd (×)</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody">
+          <!-- rows injected here -->
+        </tbody>
+      </table>
+    </div>
 
-  <footer>
-    <small>MH ANLIZING — descriptive analytics only. Not for betting or signals.</small>
-  </footer>
+    <footer>
+      <div class="badge">Simulation only — not for real gambling</div>
+      <div class="tiny">Generated values are random. Minors must not gamble.</div>
+    </footer>
+  </div>
 
-  <script src="app.js"></script>
+  <script>
+    // Random Super-Spike Simulator
+    // Purpose: educational demo. Generates only "super" events (>=10x) from a random process.
+    // Not a predictor. Not for gambling.
+
+    const genBtn = document.getElementById('genBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultBody = document.getElementById('resultBody');
+
+    function randChoice(probabilities) {
+      // probabilities: array of [value, prob] where probs sum to 1
+      const r = Math.random();
+      let s = 0;
+      for (const [val, p] of probabilities) {
+        s += p;
+        if (r <= s) return val;
+      }
+      return probabilities[probabilities.length-1][0];
+    }
+
+    function generateMultiplier() {
+      // Create a heavy-tail generator but we will keep only >=10x outputs.
+      // We'll sample from a mixture: many low, some med, few heavy,
+      // but then if <10x we ignore. To produce enough super events we loop.
+      // Here we use Pareto-like for heavy tail.
+      const r = Math.random();
+      if (r < 0.88) {
+        // low
+        return 1 + Math.pow(Math.random(), 0.6) * 2; // mostly 1-3
+      } else if (r < 0.98) {
+        // medium
+        return 3 + Math.random() * 7; // up to ~10
+      } else {
+        // heavy tail (pareto-ish)
+        const alpha = 1.6;
+        const u = Math.random();
+        const pareto = 1 / Math.pow(u, 1/alpha); // >1
+        return 10 + pareto * (5 + Math.random()*35); // stretch to 10-50+
+      }
+    }
+
+    function formatOdd(x){
+      // display with two decimals, but remove trailing zeros if integer-like
+      return parseFloat(x.toFixed(2)).toString();
+    }
+
+    function timeFromStart(startTimeStr, roundIdx, intervalSec){
+      // startTimeStr = "HH:MM"
+      const parts = startTimeStr.split(':');
+      const now = new Date();
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(parts[0],10)||0, parseInt(parts[1],10)||0, 0);
+      const t = new Date(d.getTime() + (roundIdx-1) * intervalSec * 1000);
+      return t.toTimeString().slice(0,8);
+    }
+
+    function makeRow(time, round, odd) {
+      const tr = document.createElement('tr');
+      tr.className = 'super';
+      tr.innerHTML = `
+        <td class="time">${time}</td>
+        <td class="round">${round}</td>
+        <td class="odd odd-val">${formatOdd(odd)}×</td>
+        <td class="note">🟥 SUPER SUPER (>=10×)</td>
+      `;
+      return tr;
+    }
+
+    genBtn.addEventListener('click', ()=> {
+      const startTime = document.getElementById('startTime').value || '16:28';
+      const intervalSec = Math.max(5, parseInt(document.getElementById('intervalSec').value) || 15);
+      const roundCount = Math.max(10, Math.min(5000, parseInt(document.getElementById('roundCount').value) || 200));
+
+      // Clear previous
+      resultBody.innerHTML = '';
+      // We'll simulate up to roundCount, but we only add rows for rounds where multiplier >=10
+      let superCount = 0;
+      for (let r=1; r<=roundCount; r++){
+        // sample multiplier; if not >=10, maybe still occasionally accept to keep density manageable
+        // We'll loop a few times to let heavy-tail produce occasional >=10 value
+        let m = generateMultiplier();
+        // If it's <10, we simply skip it; that keeps table with only super events.
+        if (m >= 10) {
+          superCount++;
+          const t = timeFromStart(startTime, r, intervalSec);
+          const row = makeRow(t, r, m);
+          resultBody.appendChild(row);
+        }
+      }
+
+      if (resultBody.children.length === 0) {
+        // No super events found in this run — show friendly hint
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="4" class="tiny" style="padding:18px 10px;text-align:center;color:var(--muted)">No Super-Super events (≥10×) found in this simulation — try increasing round count or interval.</td>`;
+        resultBody.appendChild(tr);
+      }
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      resultBody.innerHTML = '';
+    });
+
+    // Accessibility: allow Enter to trigger generate when focused
+    genBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter') genBtn.click(); });
+  </script>
 </body>
 </html>
